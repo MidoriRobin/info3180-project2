@@ -7,7 +7,7 @@ This file creates your application.
 
 from app import app
 from flask import render_template, request, redirect, url_for
-
+from .forms import *
 
 ###
 # Routing for your application.
@@ -24,6 +24,28 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+@app.route('/profile/', methods=['GET','POST'])
+def profile():
+    """Form to add a new profile"""
+    proform = SignUpForm()
+    if request.method == 'POST' and profrom.validate_on_submit():
+        firstname = proform.firstname.data
+        lastname = proform.lastname.data
+        email = proform.email.data
+        location = proform.location.data
+        gender = proform.gender.data
+        biography = proform.bio.data
+
+        return redirect(url_for('home'))
+    return render_template('profile.html', form=proform)
+
+"""@app.route('/profile/<userid>')
+def profile(userid):"""
+
+
+@app.route('/profiles')
+def profiles():
+    pass
 
 ###
 # The functions below should be applicable to all Flask apps.
