@@ -4,12 +4,13 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-
-from app import app
-from flask import render_template, request, redirect, url_for
+import os
+from app import app, db
+from flask import render_template, request, redirect, url_for, flash
 from .forms import *
 from app.models import UserProfile
 from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
 
 ###
 # Routing for your application.
@@ -30,7 +31,7 @@ def about():
 def profile():
     """Form to add a new profile"""
     proform = SignUpForm()
-    if request.method == 'POST' and profrom.validate_on_submit():
+    if request.method == 'POST' and proform.validate_on_submit():
         firstname = proform.firstname.data
         lastname = proform.lastname.data
         email = proform.email.data
@@ -39,16 +40,16 @@ def profile():
         biography = proform.bio.data
 
     # Get file data and name
-        photofile = proform.photofile.data
+        photofile = proform.photo.data
         picname = photofile.filename
     # Saving filename and data to uploads folder
         filename = secure_filename(picname)
-        photo.save(os.path.join(
+        photofile.save(os.path.join(
             app.config['UPLOAD_FOLDER'], filename
         ))
         flash('Photo saved!')
     # Adding user info to database
-        user = UserProfile(firstname,lastname,email,location,gender,biography,photoname)
+        user = UserProfile(firstname,lastname,email,location,gender,biography,picname)
         db.session.add(user)
         db.session.commit()
         flash('New user added!')
@@ -61,7 +62,7 @@ def profile(userid):"""
 
 @app.route('/profiles')
 def profiles():
-    pass
+    return render_template("profiles.html")
 
 ###
 # The functions below should be applicable to all Flask apps.
