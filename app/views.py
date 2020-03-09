@@ -8,6 +8,8 @@ This file creates your application.
 from app import app
 from flask import render_template, request, redirect, url_for
 from .forms import *
+from app.models import UserProfile
+from werkzeug.security import check_password_hash
 
 ###
 # Routing for your application.
@@ -36,7 +38,21 @@ def profile():
         gender = proform.gender.data
         biography = proform.bio.data
 
-        return redirect(url_for('home'))
+    # Get file data and name
+        photofile = proform.photofile.data
+        picname = photofile.filename
+    # Saving filename and data to uploads folder
+        filename = secure_filename(picname)
+        photo.save(os.path.join(
+            app.config['UPLOAD_FOLDER'], filename
+        ))
+        flash('Photo saved!')
+    # Adding user info to database
+        user = UserProfile(firstname,lastname,email,location,gender,biography,photoname)
+        db.session.add(user)
+        db.session.commit()
+        flash('New user added!')
+        return redirect(url_for('profiles'))
     return render_template('profile.html', form=proform)
 
 """@app.route('/profile/<userid>')
