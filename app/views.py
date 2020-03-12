@@ -54,15 +54,22 @@ def profile():
         db.session.commit()
         flash('New user added!')
         return redirect(url_for('profiles'))
-    return render_template('profile.html', form=proform)
+    return render_template('signup.html', form=proform)
 
-"""@app.route('/profile/<userid>')
-def profile(userid):"""
+@app.route('/profile/<userid>')
+def show_profile(userid):
+    if userid != '':
+        user=UserProfile.query.filter_by(id=userid).first()
+    else:
+        flash("No such user exists")
+        return redirect(url_for("profiles"))
+    return render_template("profile.html", user=user)
 
 
 @app.route('/profiles')
 def profiles():
-    return render_template("profiles.html")
+    users = UserProfile.query.filter_by().all()
+    return render_template("profiles.html", profiles=users)
 
 ###
 # The functions below should be applicable to all Flask apps.

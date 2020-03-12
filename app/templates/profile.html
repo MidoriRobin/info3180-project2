@@ -1,39 +1,32 @@
 {% extends "base.html" %}
 
 {% block main %}
-    <h1>Profile - Sign Up</h1>
-    <p>Leave your name, email and a message and i'll get back to you.</p>
-    <form method="post" action="{{ url_for('profile') }}" enctype="multipart/form-data">
-        {{ form.csrf_token }}
-        <div class="form-group">
-            {{form.firstname.label }} {{ form.firstname }}
-        </div>
-        
-        <div class="form-group">
-            {{ form.lastname.label  }} {{ form.lastname }}
-        </div>
-
-        <div class="form-group">
-            {{ form.gender.label }} {{ form.gender }}
-        </div>
-
-        <div class="form-group">
-            {{ form.email.label }} {{ form.email }}
-        </div>
-
-        <div class="form-group">
-            {{ form.location.label }} {{ form.location }}
-        </div>
-
-        <div class="form-group" id="t-area">
-            {{ form.bio.label }} {{ form.bio }}
-        </div>
-
-        <div class="form-group">
-          {{ form.photo.label }}
-          {{ form.photo(class="form-control") }}
-        </div>
-
-        <button type="submit">Submit</button>
-    </form>
+    <div class="lead">
+      <img src="{{ url_for('static',filename='uploads/' + user.photoname) }}">
+      <h2 class="head">{{ "{} {}".format(user.first_name, user.last_name) }}</h2>
+      <div class="oinfo">
+        <p> {{user.email}} </p>
+        <p> {{user.location}} </p>
+        <p> Date Joined: Today </p>
+      </div>
+    </div>
+    <div class="who">
+      <div class="desc">
+        <p>{{ user.biography }}</p>
+      </div>
+      <div class="vanis">
+        <table>
+          <tr>
+            <th>1</th>
+            <th>100</th>
+            <th>250</th>
+          </tr>
+          <td>Posts</td>
+          <td>Followers</td>
+          <td>Following</td>
+        </table>
+        <button type="button" name="message">Send Message</button>
+        <button type="button" name="Follow">Follow</button>
+      </div>
+    </div>
 {% endblock %}
