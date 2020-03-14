@@ -33,11 +33,32 @@ button:hover{
   color: white;
 }
 
-
-
 .flashes{
   margin: auto auto;
   list-style-type: none;
   width: 100%;
   background-color: lightgreen;
+}
+
+ul.proflist{
+  margin-top: 50px;
+  list-style: none;
+}
+
+.proflist li{
+  display: flex;
+  border-top-style: solid;
+  border-top-color: blue;
+  border-radius: 10px;
+  box-shadow: 1px 3px 4px gray;
+  padding: 10px;
+  margin: 20px;
+}
+
+.proflist div{
+  padding-left: 20px;
+}
+
+.proflist img{
+  width: 150px;
 }

@@ -1,15 +1,18 @@
 {% extends "base.html" %}
 
 {% block main %}
-    <ul>
+    <ul class="proflist">
       {% for user in profiles %}
       <li>
-        <h3>{{ "{} {}".format(user.first_name,user.last_name) }}</h3>
-        <p>{{ user.gender }}</p>
-        <p>{{ user.location }}</p>
-        <button type="button"
+        <img src="{{ url_for('static',filename='uploads/' + user.photoname) }}" alt="">
+        <div>
+          <h3>{{ "{} {}".format(user.first_name,user.last_name) }}</h3>
+          <p>{{ user.gender }}</p>
+          <p>{{ user.location }}</p>
+          <button type="button"
           onclick="window.location.href='{{ url_for('show_profile', userid=user.get_id()) }}'"
           name="profile">View Profile</button>
+        </div>
       </li>
       {% endfor %}
     </ul>
