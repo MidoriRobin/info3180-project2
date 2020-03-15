@@ -1,30 +1,21 @@
 {% extends "base.html" %}
 
 {% block main %}
-    <div class="lead">
-      <img src="{{ url_for('static',filename='uploads/' + user.photoname) }}">
-      <h2 class="head">{{ "{} {}".format(user.first_name, user.last_name) }}</h2>
-      <div class="oinfo">
-        <p> {{user.email}} </p>
-        <p> {{user.location}} </p>
-        <p> Date Joined: Today </p>
+    <div class="prosplash">
+      <div class="lead">
+        <img src="{{ url_for('static',filename='uploads/' + user.photoname) }}">
       </div>
-    </div>
-    <div class="who">
+      <div class="who">
+        <h3 class="head">{{ "{} {}".format(user.first_name, user.last_name) }}</h3>
+        <ul class="oinfo">
+          <li class="email">{{user.email}}</li>
+          <li class="where">{{user.location}}</li>
+          <li class="when">Date Joined: Today</li>
+        </ul>
+      </div>
       <div class="desc">
+        <h5>About me</h5>
         <p>{{ user.biography }}</p>
-      </div>
-      <div class="vanis">
-        <table>
-          <tr>
-            <th>1</th>
-            <th>100</th>
-            <th>250</th>
-          </tr>
-          <td>Posts</td>
-          <td>Followers</td>
-          <td>Following</td>
-        </table>
         <button type="button" name="message">Send Message</button>
         <button type="button" name="Follow">Follow</button>
       </div>
