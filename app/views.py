@@ -11,6 +11,7 @@ from .forms import *
 from app.models import UserProfile
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
+from datetime import date
 
 ###
 # Routing for your application.
@@ -38,6 +39,7 @@ def profile():
         location = proform.location.data
         gender = proform.gender.data
         biography = proform.bio.data
+        joindate = date.today()
 
     # Get file data and name
         photofile = proform.photo.data
@@ -49,7 +51,7 @@ def profile():
         ))
         flash('Photo saved!')
     # Adding user info to database
-        user = UserProfile(firstname,lastname,email,location,gender,biography,picname)
+        user = UserProfile(firstname,lastname,email,location,gender,biography,picname,joindate)
         db.session.add(user)
         db.session.commit()
         flash('New user added!')
@@ -70,6 +72,10 @@ def show_profile(userid):
 def profiles():
     users = UserProfile.query.filter_by().all()
     return render_template("profiles.html", profiles=users)
+
+def format_date_joined(sDate):
+    jDate = sDate.strftime("%B, %Y")
+    return jDate
 
 ###
 # The functions below should be applicable to all Flask apps.

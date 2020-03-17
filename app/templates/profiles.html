@@ -4,15 +4,15 @@
     <ul class="proflist">
       {% for user in profiles %}
       <li>
-        <img src="{{ url_for('static',filename='uploads/' + user.photoname) }}" alt="">
+        <img class="plpic" src="{{ url_for('static',filename='uploads/' + user.photoname) }}" alt="">
         <div>
-          <h3>{{ "{} {}".format(user.first_name,user.last_name) }}</h3>
-          <p>{{ user.gender }}</p>
-          <p>{{ user.location }}</p>
-          <button type="button"
-          onclick="window.location.href='{{ url_for('show_profile', userid=user.get_id()) }}'"
-          name="profile">View Profile</button>
+          <h4>{{ "{} {}".format(user.first_name,user.last_name) }}</h4>
+          <p><img src="https://img.icons8.com/windows/32/000000/person-male.png" alt="Person">{{ user.gender }}</p>
+          <p><img src="https://img.icons8.com/windows/32/000000/worldwide-location.png" alt="location">{{ user.location }}</p>
         </div>
+        <button type="button"
+        onclick="window.location.href='{{ url_for('show_profile', userid=user.get_id()) }}'"
+        name="profile">View Profile</button>
       </li>
       {% endfor %}
     </ul>

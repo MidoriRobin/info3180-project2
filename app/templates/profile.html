@@ -10,7 +10,7 @@
         <ul class="oinfo">
           <li class="email">{{user.email}}</li>
           <li class="where">{{user.location}}</li>
-          <li class="when">Date Joined: Today</li>
+          <li class="when">Joined on {{ user.getdate() }}</li>
         </ul>
       </div>
       <div class="desc">

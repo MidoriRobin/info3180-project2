@@ -1,5 +1,6 @@
 from . import db
 from werkzeug.security import generate_password_hash
+from datetime import date
 
 class UserProfile(db.Model):
 
@@ -13,9 +14,10 @@ class UserProfile(db.Model):
     gender = db.Column(db.String(6))
     biography = db.Column(db.Text)
     photoname = db.Column(db.String(50))
+    joindate = db.Column(db.DateTime)
 
     def __init__(self, first_name, last_name, email, location, gender,
-                    bio, photoname):
+                    bio, photoname, joindate):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -23,6 +25,7 @@ class UserProfile(db.Model):
         self.gender = gender
         self.biography = bio
         self.photoname = photoname
+        self.joindate = joindate
 
     def is_authenticated(self):
         return True
@@ -32,6 +35,9 @@ class UserProfile(db.Model):
 
     def is_anonymous(self):
         return False
+
+    def getdate(self):
+        return self.joindate.strftime("%B %d, %Y")
 
     def get_id(self):
         try:
