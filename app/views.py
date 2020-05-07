@@ -17,16 +17,21 @@ from datetime import date
 # Routing for your application.
 ###
 
-@app.route('/')
-def home():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def index(path):
     """Render website's home page."""
-    return render_template('home.html')
+    return render_template('index.html')
 
+"""@app.route('/home')
+def index():
+    "Index enuh"
+    return render_template('index.html')"""
 
 @app.route('/about/')
 def about():
     """Render the website's about page."""
-    return render_template('about.html', name="Mary Jane")
+    return render_template('/convert/about.html', name="Mary Jane")
 
 @app.route('/profile/', methods=['GET','POST'])
 def profile():
@@ -56,7 +61,7 @@ def profile():
         db.session.commit()
         flash('New user added!')
         return redirect(url_for('profiles'))
-    return render_template('signup.html', form=proform)
+    return render_template('/convert/signup.html', form=proform)
 
 @app.route('/profile/<userid>')
 def show_profile(userid):
@@ -65,13 +70,13 @@ def show_profile(userid):
     else:
         flash("No such user exists")
         return redirect(url_for("profiles"))
-    return render_template("profile.html", user=user)
+    return render_template("/convert/profile.html", user=user)
 
 
 @app.route('/profiles')
 def profiles():
     users = UserProfile.query.filter_by().all()
-    return render_template("profiles.html", profiles=users)
+    return render_template("/convert/profiles.html", profiles=users)
 
 def format_date_joined(sDate):
     jDate = sDate.strftime("%B, %Y")

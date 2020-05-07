@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div id="app">
+  <app-header></app-header>
+
+  <div class="Main">
+    <div class="Nothing">
+      <router-view></router-view>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>
+{% endblock %}
