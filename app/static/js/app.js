@@ -19,7 +19,7 @@ Vue.component('app-header',{
                 <router-link class="nav-link" to="/profile">Sign-Up</router-link>
               </li>
               <li class="nav-item active">
-                <router-link class="nav-link" to="/profiles">Profiles</router-link>
+                <router-link class="nav-link" to="/posts">Posts</router-link>
               </li>
             </ul>
           </div>
@@ -170,14 +170,21 @@ const LogIn = Vue.component('login',{
 
 })
 
-const Profiles = Vue.component('profiles',{
+const Posts = Vue.component('posts',{
     template: `
         <div>
-          <h1>Coming soon..</h1>
+          <h1>Return all Posts..</h1>
+          <!-- code to display the posts and select component by id-->
         </div>
     `,
     data: function (){
         return {}
+    },
+    methods:{
+      getPost:function () {
+        
+
+      }
     }
 });
 
@@ -187,7 +194,7 @@ const router = new VueRouter({
       { path: '/', component: Home },
       { path: '/About', component: About },
       { path: '/profile', component: SignUp },
-      { path: '/profiles', component: Profiles },
+      { path: '/posts', component: Posts },
       { path: '/profile/<userid>'}
   ]
 })
