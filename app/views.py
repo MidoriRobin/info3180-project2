@@ -12,6 +12,7 @@ from app.models import UserProfile
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import date
+from flask import jsonify
 
 ###
 # Routing for your application.
@@ -82,6 +83,147 @@ def format_date_joined(sDate):
     jDate = sDate.strftime("%B, %Y")
     return jDate
 
+###
+#Project 2 Routes
+###
+
+@app.route('/api/users/register', methods['POST'])
+def register(arg):
+
+    regForm = SignUpForm()
+
+    if request.method == 'POST' and regForm.validate_on_submit():
+
+        fname = request.form['firstname']
+        lname = request.form['lastname']
+        uname = request.form['username']
+        gender = request.form['gender']
+        email = request.form['email']
+        location = request.form['location']
+        bio = request.form['bio']
+        photo = request.files['photo']
+
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        user = UserProfile(firstname,lastname,email,location,gender,biography,picname,joindate)
+        user = UserProfile(firstname,lastname,email,location,gender,biography,picname,joindate)
+        db.session.add(user)
+        db.session.commit()
+
+        status = [{
+            "message": "Registration successful",
+            "firstname": fname,
+            "lastname": lname,
+            "username": uname,
+            "password": password,
+            "email": email,
+            "location": location,
+            "bio": bio,
+            "profile_photo": photo
+        }]
+
+        return jsonify(status=status)
+
+    else:
+        status = {
+            "errors": [
+                form_errors(regForm)
+            ]
+        }
+    return jsonify(status=status)
+
+@app.route('/api/auth/login', methods['POST'])
+def login(arg):
+    lForm = LoginForm()
+
+    if request.method == 'POST' and lForm.validate_on_submit():
+        username = request.form['username']
+        password = request.form['password']
+
+        user = UserProfile.query.filter_by(username=username).first()
+        if user is not None and check_password_hash(user.password,password):
+
+            login_user(user)
+            flash('Successful Login!')
+
+            status = [{
+                "message": "User successfully loggged in",
+                "username": username,
+                "password": password
+            }]
+
+            return jsonify(status=status)
+
+        else:
+            status = {
+                "errors":[
+                    form_errors(lForm)
+                ]
+            }
+
+        return jsonify(status=status)
+    pass
+
+
+@app.route('/api/auth/logout', methods['GET'])
+@login_required
+def logout(arg):
+    logout_user()
+    flash('Logout successful!')
+
+    status = [{
+        "message": "User successfully logged out"
+    }]
+
+    return jsonify(status=status)
+    pass
+
+@app.route('/api/users/<user_id>/posts', methods['POST'])
+def usr_add_post(arg):
+
+    pForm = PostForm()
+
+    if request.method == 'POST' and pForm.validate_on_submit():
+
+        uid = request.form['userid']
+        description = request.form['description']
+        photo = request.file['photopost']
+
+        filename = secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        #post class accepting the above values would go here
+
+        status = [{
+            "message": "Successfully created a new post"
+        }]
+
+    else:
+        status = {
+            "errors": [
+                form_errors(pForm)
+            ]
+        }
+
+    return jsonify(status=status)
+    pass
+
+@app.route('/api/users/<user_id>/posts', methods['GET'])
+def usr_fetch_post(arg):
+    pass
+
+@app.route('/api/users/<user_id>/follow', methods['POST'])
+def usr_follow(arg):
+    pass
+
+@app.route('/api/posts', methods['GET'])
+def get_all_posts(arg):
+    pass
+
+@app.route('/api/posts/<user_id>/like', methods['POST'])
+def like_post(arg):
+    pass
 ###
 # The functions below should be applicable to all Flask apps.
 ###

@@ -82,7 +82,7 @@ const SignUp = Vue.component('signup',{
       <div class="sign">
         <h1>Profile - Sign Up</h1>
         <p>Please fill out all fields listed below.</p>
-        <form method="post" action="{{ url_for('profile') }}" enctype="multipart/form-data">
+        <form @submit.prevent="signUp" id="signUpForm" method="post" action="{{ url_for('profile') }}" enctype="multipart/form-data">
 
           <div class="form-group">
             <label for="firstname"> First Name: </label>
@@ -125,8 +125,50 @@ const SignUp = Vue.component('signup',{
     `,
     data: function () {
         return {}
+    },
+    methods: {
+        signUp: function() {
+            let self = this;
+            let signUpForm = document.getElementById('signUpForm');
+            let form_data = new FormData(signUpForm);
+        }
     }
 });
+
+const LogIn = Vue.component('login',{
+    template:`
+    <div>
+      <form class="form-login" @submit.prevent="loginUser" id="loginForm" method="post" enctype="multipart/form-data">
+        <h2>Please Log in</h2>
+        {% if error %}
+          <div class="alert alert-danger">
+            <strong>Error:</strong> {{ error }}
+          </div>
+        {% endif %}
+        <div class="form-group">
+          <label for="username" class="sr-only">Username</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Your username" required >
+        </div>
+        <div class="form-group">
+          <label for="password" class="sr-only">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+    </div>
+    `,
+    data: function () {
+        return {}
+    },
+    methods: {
+        loginUser: function(){
+            let self = this;
+            let loginForm = document.getElementById('loginForm')
+            let form_data = new FormData(loginForm);
+        }
+    }
+
+})
 
 const Profiles = Vue.component('profiles',{
     template: `
