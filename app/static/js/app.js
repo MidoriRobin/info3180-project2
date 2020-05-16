@@ -3,7 +3,7 @@ Vue.component('app-header',{
     template:`
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-          <span class="navbar-brand mb-0 h1">INFO3180 - PROJECT 1</span>
+          <span class="navbar-brand mb-0 h1">Photogram</span>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -40,11 +40,18 @@ Vue.component('app-footer',{
 
 const Home = Vue.component('home',{
     template: `
-    <div class="jumbotron">
+    <div class="noted">
       <div class="container">
         <h1>Hello, world!</h1>
         <p>This is 620103170's submission of INFO3180 project 1</p>
         <p><a class="btn btn-primary" href="#" role="button">Learn more »</a></p>
+      </div>
+      <div class="container">
+          <h2>Photogram</h2>
+          <p> Share photos of your favourite moments with friends
+              family and the world</p>
+          <button @click="$router.push('register')" type="button" name="button">Register</button>
+          <button @click="$router.push('login')" type="button" name="button">Login</button>
       </div>
     </div>
     `,
@@ -82,7 +89,7 @@ const SignUp = Vue.component('signup',{
       <div class="sign">
         <h1>Profile - Sign Up</h1>
         <p>Please fill out all fields listed below.</p>
-        <form @submit.prevent="signUp" id="signUpForm" method="post" action="{{ url_for('profile') }}" enctype="multipart/form-data">
+        <form @submit.prevent="signUp" id="signUpForm" method="post" enctype="multipart/form-data">
 
           <div class="form-group">
             <label for="firstname"> First Name: </label>
@@ -135,16 +142,15 @@ const SignUp = Vue.component('signup',{
     }
 });
 
-const LogIn = Vue.component('login',{
+const Login = Vue.component('login',{
     template:`
     <div>
       <form class="form-login" @submit.prevent="loginUser" id="loginForm" method="post" enctype="multipart/form-data">
         <h2>Please Log in</h2>
-        {% if error %}
-          <div class="alert alert-danger">
-            <strong>Error:</strong> {{ error }}
+
+          <div v-if="error != 'None' " class="alert alert-danger">
+            <strong>Error:</strong> <$ error $>
           </div>
-        {% endif %}
         <div class="form-group">
           <label for="username" class="sr-only">Username</label>
           <input type="text" id="username" name="username" class="form-control" placeholder="Your username" required >
@@ -158,7 +164,7 @@ const LogIn = Vue.component('login',{
     </div>
     `,
     data: function () {
-        return {}
+        return { error : "None" }
     },
     methods: {
         loginUser: function(){
@@ -182,6 +188,7 @@ const Posts = Vue.component('posts',{
     },
     methods:{
       getPost:function () {
+<<<<<<< HEAD
         fetch('/api/users/<user_id>/posts',{
           'headers':{
             'Authorization': 'Bearer'
@@ -193,6 +200,9 @@ const Posts = Vue.component('posts',{
         .then(function(response){
           console.log(response);
         })
+=======
+
+>>>>>>> f85a4bde7f4758faadca6b527155a8c3f1a7e5b1
 
       }
     }
@@ -202,15 +212,18 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
       { path: '/', component: Home },
+      { path: '/register', component: SignUp },
       { path: '/About', component: About },
+      { path: '/login', component: Login },
+      //{ path: '/logout', component: Logout },
+      //{ path: '/explore', component: Explore },
       { path: '/profile', component: SignUp },
-      { path: '/posts', component: Posts },
-      { path: '/profile/<userid>'}
+      { path: '/posts/new', component: Posts },
+      //{ path: '/users/:user_id', component: ViewUser}
   ]
 })
 // Instantiating main vue instance
 let app = new Vue({
     el: "#app",
-    router,
-    delimiters:["<$","$>"]
+    router
 });
