@@ -6,7 +6,7 @@ This file creates your application.
 """
 import os
 import jwt
-from app import app, db
+from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from .forms import *
 from app.models import UserProfile
@@ -24,6 +24,19 @@ from datetime import date
 def index(path):
     """Render website's home page."""
     return render_template('index.html')
+
+def form_errors(form):
+    error_messages = []
+    """Collects form errors"""
+    for field, errors in form.errors.items():
+        for error in errors:
+            message = u"Error in the %s field - %s" % (
+                    getattr(form, field).label.text,
+                    error
+                )
+            error_messages.append(message)
+
+    return error_messages
 
 """@app.route('/home')
 def index():
@@ -88,12 +101,12 @@ def format_date_joined(sDate):
 #Project 2 Routes
 ###
 
-@app.route('/api/users/register', methods=['POST'])
-def register(arg):
+@app.route('/api/users/register', methods=['POST']) #GOOD
+def register():
 
     regForm = SignUpForm()
 
-    if request.method == 'POST' and regForm.validate_on_submit():
+    if request.method == 'POST':
 
         fname = request.form['firstname']
         lname = request.form['lastname']
@@ -101,16 +114,17 @@ def register(arg):
         gender = request.form['gender']
         email = request.form['email']
         location = request.form['location']
+        password = request.form['password']
         bio = request.form['bio']
         photo = request.files['photo']
 
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        user = UserProfile(firstname,lastname,email,location,gender,biography,picname,joindate)
         #user = UserProfile(firstname,lastname,email,location,gender,biography,picname,joindate)
-        db.session.add(user)
-        db.session.commit()
+        #user = UserProfile(firstname,lastname,email,location,gender,biography,picname,joindate)
+        #db.session.add(user)
+        #db.session.commit()
 
         status = [{
             "message": "Registration successful",
@@ -121,7 +135,7 @@ def register(arg):
             "email": email,
             "location": location,
             "bio": bio,
-            "profile_photo": photo
+            "profile_photo": filename
         }]
 
         return jsonify(status=status)
@@ -163,8 +177,8 @@ def login(arg):
                 ]
             }
 
-        return jsonify(status=status)
-    pass
+    return jsonify(status=status)
+
 
 
 @app.route('/api/auth/logout', methods=['GET'])
@@ -212,10 +226,13 @@ def usr_add_post(user_id):
         }
 
     return jsonify(status=status)
-    pass
+
 
 @app.route('/api/users/<user_id>/posts', methods=['GET'])
-def usr_fetch_post(arg):
+def usr_fetch_post(user_id):
+
+    posts = Posts.query.filter_by(user_id=user_id).all()
+
     pass
 
 @app.route('/api/users/<user_id>/follow', methods=['POST'])
@@ -224,17 +241,26 @@ def usr_follow(arg):
 
 @app.route('/api/posts', methods=['GET'])
 def get_all_posts(arg):
+
+    posts = Posts.query.fetchall()
     pass
 
-@app.route('/api/posts/<user_id>/like', methods=['POST'])
-def like_post(arg):
+@app.route('/api/posts/<post_id>/like', methods=['POST'])
+def like_post(post_id,user_id):
+
+    like = Likes(user_id,post_id)
+
+    db.session.add(like)
+    db.session.commit()
+
     pass
 ###
 # The functions below should be applicable to all Flask apps.
 ###
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.get(user_id)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
