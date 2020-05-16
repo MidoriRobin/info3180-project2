@@ -180,16 +180,16 @@ def logout(arg):
     return jsonify(status=status)
     pass
 
-@app.route('/api/users/<user_id>/posts', methods=['POST'])
-def usr_add_post(arg):
+@app.route('/api/users/<user_id>/posts', methods=['POST'])#Good
+def usr_add_post(user_id):
 
     pForm = PostForm()
 
-    if request.method == 'POST' and pForm.validate_on_submit():
+    if request.method == 'POST':
 
-        uid = request.form['userid']
+        uid = user_id
         description = request.form['description']
-        photo = request.file['photopost']
+        photo = request.files['photo']
 
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -197,13 +197,17 @@ def usr_add_post(arg):
         #post class accepting the above values would go here
 
         status = [{
-            "message": "Successfully created a new post"
+            "message": "Successfully created a new post",
+            "user": uid,
+            "description": description,
+            "photo": filename
         }]
 
     else:
         status = {
             "errors": [
-                form_errors(pForm)
+                #form_errors(pForm)
+                "Nothing entered"
             ]
         }
 
