@@ -182,7 +182,17 @@ const Posts = Vue.component('posts',{
     },
     methods:{
       getPost:function () {
-        
+        fetch('/api/users/<user_id>/posts',{
+          'headers':{
+            'Authorization': 'Bearer'
+          }
+        })
+        .then(function (response) {
+          return response.json()
+        })
+        .then(function(response){
+          console.log(response);
+        })
 
       }
     }
