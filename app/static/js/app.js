@@ -191,6 +191,7 @@ const Explore = Vue.component('posts',{
     },
     methods:{
       getPost:function () {
+<<<<<<< HEAD
 
       }
     }
@@ -221,6 +222,23 @@ const MakePost = Vue.component('make-post',{
           let form_data = new FormData(postForm);
 
 
+=======
+<<<<<<< HEAD
+        fetch('/api/users/<user_id>/posts',{
+          'headers':{
+            'Authorization': 'Bearer'
+          }
+        })
+        .then(function (response) {
+          return response.json()
+        })
+        .then(function(response){
+          console.log(response);
+        })
+=======
+
+>>>>>>> f85a4bde7f4758faadca6b527155a8c3f1a7e5b1
+>>>>>>> 488b91f57a8ba675f255b4afe99037bd71e36ca1
 
       }
     }
