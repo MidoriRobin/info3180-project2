@@ -176,7 +176,10 @@ const Login = Vue.component('login',{
 
 })
 
-const Posts = Vue.component('posts',{
+/*const Logout = Vue.component('logout',{
+});*/
+
+const Explore = Vue.component('posts',{
     template: `
         <div>
           <h1>Return all Posts..</h1>
@@ -189,10 +192,41 @@ const Posts = Vue.component('posts',{
     methods:{
       getPost:function () {
 
+      }
+    }
+});
+
+const MakePost = Vue.component('make-post',{
+    template:`
+    <div>
+      <form @submit.prevent="makePost" id="makePost" method="post" enctype="multipart/form-data">
+
+        <label for="description"> Description: </label>
+        <input type="text" name="description" id="description" value="">
+
+        <label for="photofile"> Pic: </label>
+        <input type="file" name="photofile" id="photofile" value="Put Image Here"><br />
+
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    `,
+    data: function () {
+        return {}
+    },
+    methods: {
+      makePost: function() {
+          let self = this;
+          let postForm = document.getElementById('postForm');
+          let form_data = new FormData(postForm);
+
+
 
       }
     }
 });
+
+
 
 const router = new VueRouter({
   mode: 'history',
@@ -202,9 +236,9 @@ const router = new VueRouter({
       { path: '/About', component: About },
       { path: '/login', component: Login },
       //{ path: '/logout', component: Logout },
-      //{ path: '/explore', component: Explore },
+      { path: '/explore', component: Explore },
       { path: '/profile', component: SignUp },
-      { path: '/posts/new', component: Posts },
+      { path: '/posts/new', component: MakePost },
       //{ path: '/users/:user_id', component: ViewUser}
   ]
 })
