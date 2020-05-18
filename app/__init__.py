@@ -5,7 +5,7 @@ import jwt
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './app/static/uploads'
-app.config['SECRET_KEY'] = "GazaHaveMoreFans"
+app.config['SECRET_KEY'] = "IHaveBeenAtUWIForTooLongINeedToLeave"
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://proj2:proj2@localhost/proj2"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 

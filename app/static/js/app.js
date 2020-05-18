@@ -16,10 +16,13 @@ Vue.component('app-header',{
                 <router-link class="nav-link" to="/about">About</router-link>
               </li>
               <li class="nav-item active">
-                <router-link class="nav-link" to="/profile">Sign-Up</router-link>
+                <router-link class="nav-link" to="/register">Sign-Up</router-link>
               </li>
               <li class="nav-item active">
-                <router-link class="nav-link" to="/posts">Posts</router-link>
+                <router-link class="nav-link" to="/explore">Explore</router-link>
+              </li>
+              <li class="nav-item active">
+                <router-link class="nav-link" to="/posts/new">Make post</router-link>
               </li>
             </ul>
           </div>
@@ -102,6 +105,11 @@ const SignUp = Vue.component('signup',{
           </div>
 
           <div class="form-group">
+            <label for="username"> Username: </label>
+            <input type="text" name="username" placeholder="Username">
+          </div>
+
+          <div class="form-group">
             <label for="gender"> Gender </label>
             <input type="text" name="gender" placeholder="Gender">
           </div>
@@ -109,6 +117,11 @@ const SignUp = Vue.component('signup',{
           <div class="form-group">
             <label for="email"> Email </label>
             <input type="text" name="email" placeholder="example@test.com">
+          </div>
+
+          <div class="form-group">
+            <label for="password"> Password </label>
+            <input type="password" name="password" placeholder="Be Creative...clown">
           </div>
 
           <div class="form-group">
@@ -135,80 +148,212 @@ const SignUp = Vue.component('signup',{
     },
     methods: {
         signUp: function() {
+            console.log(" Sign up function runs")
             let self = this;
             let signUpForm = document.getElementById('signUpForm');
             let form_data = new FormData(signUpForm);
+
+            fetch("/api/users/register", {
+                method: 'POST',
+                body: form_data,
+                headers: {
+
+                },
+                credentials: 'same-origin'
+            })
+            .then(function (response){
+                return response.json();
+            })
+            .then(function (jsonResponse) {
+                console.log(jsonResponse);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 });
 
 const Login = Vue.component('login',{
     template:`
-    <div>
-      <form class="form-login" @submit.prevent="loginUser" id="loginForm" method="post" enctype="multipart/form-data">
-        <h2>Please Log in</h2>
+      <div>
+        <form class="form-login" @submit.prevent="loginUser" id="loginForm" method="post" enctype="multipart/form-data">
+          <h2>Please Log in</h2>
 
-          <div v-if="error != 'None' " class="alert alert-danger">
-            <strong>Error:</strong> <$ error $>
+            <div v-if="error != 'None' " class="alert alert-danger">
+              <strong>Error:</strong> <$ error $>
+            </div>
+          <div class="form-group">
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Your username" required >
           </div>
-        <div class="form-group">
-          <label for="username" class="sr-only">Username</label>
-          <input type="text" id="username" name="username" class="form-control" placeholder="Your username" required >
-        </div>
-        <div class="form-group">
-          <label for="password" class="sr-only">Password</label>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
-    </div>
+          <div class="form-group">
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+      </div>
     `,
     data: function () {
+
         return { error : "None" }
+    },
+    created: function () {
+      console.log("Entered the login page");
     },
     methods: {
         loginUser: function(){
+            console.log("Login function runs")
             let self = this;
-            let loginForm = document.getElementById('loginForm')
+            let loginForm = document.getElementById('loginForm');
             let form_data = new FormData(loginForm);
-        }
-    }
 
-})
+            fetch("/api/auth/login", {
+                method: 'POST',
+                body: form_data,
+                headers: {
+
+                },
+                credentials: 'same-origin'
+            })
+            .then(function (response){
+                return response.json();
+            })
+            .then(function (response) {
+                let jwt_token = response.data.token;
+
+                localStorage.setItem('token', jwt_token);
+                console.info('Token generated and added to localStorage');
+                router.push('explore');
+            })
+            .then(function (jsonResponse) {
+
+              console.log(jsonResponse);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+
+    }
+});
 
 /*const Logout = Vue.component('logout',{
 });*/
 
-const Explore = Vue.component('posts',{
+const Explore = Vue.component('explore',{
     template: `
         <div>
-          <h1>Return all Posts..</h1>
+          <h1>Return all Posts..chgvjhb</h1>
           <!-- code to display the posts and select component by id-->
+          <ul v-if="posts === '' ">
+              <h2> No posts to display....or you arent authorized</h2>
+          </ul>
+          <ul v-else>
+              <h2> Posts go here </h2>
+              <li v-for="post in posts">
+                  <h4> {{ post.caption }} </h4>
+                  <p> {{ post.created_on }}</p>
+              </li>
+          </ul>
         </div>
     `,
+    created: function () {
+      //do something after creating vue instance
+      let self = this;
+      console.log("Vue instance created");
+
+      fetch("/api/posts", {
+          method: 'GET',
+          headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (data) {
+          //console.log(jsonResponse);
+
+          // if (response.data) {
+          //     let result = response.data;
+          //
+          //     self.result = `It works!!`;
+          //     console.log(self.result);
+          // } else {
+          //     self.result = `Neva work ennuh G`;
+          //     console.log(self.result);
+          // }
+
+          if (data.posts) {
+              console.log(data.posts);
+              self.posts = data.posts;
+          } else {
+            console.log("error getting posts")
+          }
+      })
+      .catch(function (error) {
+        self.result = `There was an error`;
+          console.log(self.result);
+      })
+    },
     data: function (){
-        return {}
+        return {
+          posts : []
+        }
     },
     methods:{
-      getPost:function () {
-<<<<<<< HEAD
-
-      }
+      // getPost:function () {
+      //
+      //     let self = this;
+      //
+      //     fetch("/api/posts", {
+      //         method: 'GET',
+      //         'headers': {
+      //             'Authorization': 'Basic ' + localStorage.getItem('token')
+      //         }
+      //     })
+      //     .then(function (response) {
+      //         return response.json();
+      //     })
+      //     .then(function (response) {
+      //         //console.log(jsonResponse);
+      //
+      //         if (response.data) {
+      //             let result = response.data;
+      //
+      //             self.result = `It works!!`;
+      //             console.log(self.result);
+      //         } else {
+      //             self.result = `Neva work ennuh G`;
+      //             console.log(self.result);
+      //         }
+      //     })
+      //     .catch(function (error) {
+      //       self.result = `There was an error`;
+      //         console.log(self.result);
+      //     })
+      // }
     }
 });
 
 const MakePost = Vue.component('make-post',{
     template:`
     <div>
-      <form @submit.prevent="makePost" id="makePost" method="post" enctype="multipart/form-data">
+      <form @submit.prevent="makePost" id="postForm" method="post" enctype="multipart/form-data">
 
+        <div class="form-group">
         <label for="description"> Description: </label>
         <input type="text" name="description" id="description" value="">
+        </div>
 
-        <label for="photofile"> Pic: </label>
-        <input type="file" name="photofile" id="photofile" value="Put Image Here"><br />
+        <div class="form-group">
+        <label for="photopost"> Pic: </label>
+        <input type="file" name="photopost" id="photopost" value="Put Image Here"><br />
+        </div>
 
-        <input type="submit" value="Submit">
+        <button type="submit"> Submit </button>
       </form>
     </div>
     `,
@@ -221,25 +366,21 @@ const MakePost = Vue.component('make-post',{
           let postForm = document.getElementById('postForm');
           let form_data = new FormData(postForm);
 
-
-=======
-<<<<<<< HEAD
-        fetch('/api/users/<user_id>/posts',{
-          'headers':{
-            'Authorization': 'Bearer'
-          }
-        })
-        .then(function (response) {
-          return response.json()
-        })
-        .then(function(response){
-          console.log(response);
-        })
-=======
-
->>>>>>> f85a4bde7f4758faadca6b527155a8c3f1a7e5b1
->>>>>>> 488b91f57a8ba675f255b4afe99037bd71e36ca1
-
+          fetch("/api/users/<user_id>/posts", {
+              method: 'POST',
+              body: form_data,
+              headers:{},
+              credentials: 'same-origin'
+          })
+          .then(function (response) {
+              return response.json();
+          })
+          .then(function (jsonResponse) {
+              console.log(jsonResponse);
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
       }
     }
 });
@@ -255,13 +396,16 @@ const router = new VueRouter({
       { path: '/login', component: Login },
       //{ path: '/logout', component: Logout },
       { path: '/explore', component: Explore },
-      { path: '/profile', component: SignUp },
       { path: '/posts/new', component: MakePost },
       //{ path: '/users/:user_id', component: ViewUser}
   ]
 })
+
 // Instantiating main vue instance
 let app = new Vue({
     el: "#app",
-    router
+    router,
+    data: {
+        token: '',
+    }
 });
