@@ -47,17 +47,16 @@ Vue.component('app-footer',{
 const Home = Vue.component('home',{
     template: `
     <div class="noted">
-      <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is 620103170's submission of INFO3180 project 1</p>
-        <p><a class="btn btn-primary" href="#" role="button">Learn more »</a></p>
+      <div class="container-one">
+        <img src="../static/uploads/bridge.jpg">
       </div>
-      <div class="container">
-          <h2>Photogram</h2>
+      <div class="container-two">
+          <h2><i class="fa fa-camera"></i>Photogram</h2>
+          <hr>
           <p> Share photos of your favourite moments with friends
               family and the world</p>
-          <button @click="$router.push('register')" type="button" name="button">Register</button>
-          <button @click="$router.push('login')" type="button" name="button">Login</button>
+          <button @click="$router.push('register')" type="button" name="button" class="green">Register</button>
+          <button @click="$router.push('login')" type="button" name="button" class="blue">Login</button>
       </div>
     </div>
     `,
@@ -93,22 +92,23 @@ const About = Vue.component('about',{
 const SignUp = Vue.component('signup',{
     template:`
       <div class="sign">
-        <h1>Profile - Sign Up</h1>
+        <h1>Register</h1>
+        <hr>
         <p>Please fill out all fields listed below.</p>
         <form @submit.prevent="signUp" id="signUpForm" method="post" enctype="multipart/form-data">
 
           <div class="form-group">
-            <label for="firstname"> First Name: </label>
+            <label for="firstname"> First Name </label>
             <input type="text" name="firstname" placeholder="First Name">
           </div>
 
           <div class="form-group">
-            <label for="lastname"> Last Name: </label>
+            <label for="lastname"> Last Name </label>
             <input type="text" name="lastname" placeholder="Last Name">
           </div>
 
           <div class="form-group">
-            <label for="username"> Username: </label>
+            <label for="username"> Username </label>
             <input type="text" name="username" placeholder="Username">
           </div>
 
@@ -124,24 +124,23 @@ const SignUp = Vue.component('signup',{
 
           <div class="form-group">
             <label for="password"> Password </label>
-            <input type="password" name="password" placeholder="Be Creative...clown">
+            <input type="password" name="password" >
           </div>
 
           <div class="form-group">
-            <label for="location"> Location: </label>
+            <label for="location"> Location </label>
             <input type="text" name="location" placeholder="Where are you from?">
           </div>
 
-          <div class="form-group" id="t-area">
+          <div class="form-group bio" id="t-area">
             <label for="bio"> Biography</label>
             <input type="text" name="bio" placeholder="Tell us about you">
           </div>
 
           <div class="form-group">
-            <label for="photo"> Profile Photo: </label>
+            <label for="photo"> Profile Photo </label>
             <input type="file" name="photo" placeholder="Upload a photo">
           </div>
-
           <button type="submit">Submit</button>
         </form>
       </div>
@@ -180,9 +179,10 @@ const SignUp = Vue.component('signup',{
 const Login = Vue.component('login',{
     template:`
       <div>
-        <form class="form-login" @submit.prevent="loginUser" id="loginForm" method="post" enctype="multipart/form-data">
-          <h2>Please Log in</h2>
 
+        <form class="form-login" @submit.prevent="loginUser" id="loginForm" method="post" enctype="multipart/form-data">
+          <h2>Login</h2>
+          <hr>
             <div v-if="error != 'None' " class="alert alert-danger">
               <strong>Error:</strong> <$ error $>
             </div>
@@ -194,7 +194,7 @@ const Login = Vue.component('login',{
             <label for="password" class="sr-only">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
           </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
         </form>
       </div>
     `,
@@ -290,7 +290,7 @@ const Logout = Vue.component('logout',{
 const Explore = Vue.component('explore',{
     template: `
         <div>
-          <h1>Return all Posts..chgvjhb</h1>
+
           <!-- code to display the posts and select component by id-->
           <ul v-if="posts === '' ">
               <h2> No posts to display....or you arent authorized</h2>
@@ -387,17 +387,19 @@ const Explore = Vue.component('explore',{
 
 const MakePost = Vue.component('make-post',{
     template:`
-    <div>
-      <form @submit.prevent="makePost" id="postForm" method="post" enctype="multipart/form-data">
 
+    <div class="new_">
+    <h3>New Post</h3>
+    <hr>
+      <form @submit.prevent="makePost" id="postForm" method="post" enctype="multipart/form-data">
         <div class="form-group">
-        <label for="description"> Description: </label>
-        <input type="text" name="description" id="description" value="">
+        <label for="photopost"> Photo </label>
+        <input class="photopost" type="file" name="photopost" id="photopost" value="Put Image Here"><br />
         </div>
 
         <div class="form-group">
-        <label for="photopost"> Pic: </label>
-        <input type="file" name="photopost" id="photopost" value="Put Image Here"><br />
+        <label for="description"> Caption </label>
+        <input type="text" name="description" id="description" value="" class="caption" placeholder="Write a caption...">
         </div>
 
         <button type="submit"> Submit </button>
