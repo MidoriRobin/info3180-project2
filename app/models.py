@@ -32,6 +32,24 @@ class UserProfile(db.Model):
         self.photoname = photoname
         self.joindate = joindate
 
+    def as_dict(self):
+
+        dict = {
+            "id": self.id,
+            "username": self.username,
+            "firstname": self.first_name,
+            "lastname": self.last_name,
+            "email": self.email,
+            "location": self.location,
+            "biography": self.biography,
+            "photo": self.photoname,
+            "joindate": self.getdate(),
+            "followers": len(Follows.query.filter_by(user_id=self.id).all()),
+            "posts": len(Posts.query.filter_by(user_id=self.id).all())
+        }
+
+        return dict
+
     def is_authenticated(self):
         return True
 

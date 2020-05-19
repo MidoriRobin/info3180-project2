@@ -321,18 +321,6 @@ const Explore = Vue.component('explore',{
           return response.json();
       })
       .then(function (data) {
-          //console.log(jsonResponse);
-
-          // if (response.data) {
-          //     let result = response.data;
-          //
-          //     self.result = `It works!!`;
-          //     console.log(self.result);
-          // } else {
-          //     self.result = `Neva work ennuh G`;
-          //     console.log(self.result);
-          // }
-
           if (data.posts) {
               console.log(data.posts);
               self.posts = data.posts;
@@ -434,7 +422,88 @@ const MakePost = Vue.component('make-post',{
     }
 });
 
+const ViewUser = Vue.component('view-user',{
+    template:`
+    <div>
+      <div class="prosplash">
+          <div class="lead">
+            <img :src="'/static/uploads/' + user.photo">
+          </div>
+          <div class="who">
+            <h3 class="head">{{user.firstname}} {{user.lastname}}</h3>
+            <ul class="oinfo">
+              <li class="where">{{ user.location }}</li>
+              <li class="when">Joined on {{ user.joindate }}</li>
+              <li class="email">{{ user.biography }}</li>
+            </ul>
+          </div>
+          <ul>
+            <li> Posts: {{ user.posts }} </li>
+            <li> Followers: {{ user.followers }} </li>
+            <button>Follow</button>
+          </ul>
+      </div>
+        <ul>
+          <li v-for="post in posts"><img :src="'/static/uploads/' + post.photo"></li>
+        </ul>
+    </div>
+    `,
+    created: function() {
+      let self = this;
+      //do something after creating vue instance
+      fetch("/api/users/" + this.$route.params.user_id + "/posts",{
+          method: 'GET',
+          headers: {},
+          credentials: 'same-origin'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (response) {
+          if (response.data) {
+              console.log(response.data.posts);
+              console.log(response.data.user);
+              self.posts = response.data.posts;
+              self.user = response.data.user;
+          }else{
+              console.log("error getting posts")
+          }
+      })
+      .then(function (jsonResponse) {
 
+      })
+      .catch(function (error) {
+          console.log('There was an error');
+      })
+    },
+    data: function (){
+        return {
+            posts: [],
+            user: []
+        }
+    },
+    methods: {
+      followUser: function() {
+          fetch("/api/users/"+ self.user.id + "follow",{
+              method: 'GET',
+              headers: {
+
+              },
+              credentials: 'same-origin'
+          })
+          .then(function (response) {
+              return response.json();
+          })
+          .then(function (jsonResponse) {
+            console.log(jsonResponse);
+          })
+          .catch(function (error) {
+              console.log(error);
+          })
+
+      }
+    }
+})
 
 const router = new VueRouter({
   mode: 'history',
@@ -446,7 +515,7 @@ const router = new VueRouter({
       { path: '/logout', component: Logout },
       { path: '/explore', component: Explore },
       { path: '/posts/new', component: MakePost },
-      //{ path: '/users/:user_id', component: ViewUser}
+      { path: '/users/:user_id', component: ViewUser}
   ]
 })
 

@@ -144,7 +144,7 @@ def login():
             #     "password": password
             # }]
 
-            token = generate_token()
+            token = generate_token(user.id)
             status = {
                 "token": token,
                 "message": "User successfully logged in"
@@ -212,12 +212,20 @@ def usr_add_post(user_id):
 @app.route('/api/users/<user_id>/posts', methods=['GET'])
 def usr_fetch_post(user_id):
 
+    user = UserProfile.query.filter_by(id=user_id).first()
     posts = Posts.query.filter_by(user_id=user_id).all()
+    print("List of posts: ", posts)
+    print("User: ", user)
 
-    pass
+    data ={
+        "user": user.as_dict(),
+        "posts": [post.as_dict() for post in posts]
+    }
+
+    return jsonify(data=data)
 
 @app.route('/api/users/<user_id>/follow', methods=['POST'])
-def usr_follow(arg):
+def usr_follow(user_id):
     pass
 
 @app.route('/api/posts', methods=['GET'])
@@ -262,9 +270,9 @@ def get_all_posts():
     return jsonify(error=None, posts=dictPosts, message="Success"), 201
 
 @app.route('/api/posts/<post_id>/like', methods=['POST'])
-def like_post(post_id,user_id):
+def like_post(post_id):
 
-    like = Likes(user_id,post_id)
+    like = Likes(g.current_user,post_id)
 
     db.session.add(like)
     db.session.commit()
@@ -273,10 +281,9 @@ def like_post(post_id,user_id):
 
 
 
-def generate_token():
-    user_id = 1
+def generate_token(user_id):
 
-    payload = {"user_id": 1}
+    payload = {"user_id": user_id}
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
 
     #return jsonify(error=None, data={'token': token}, message="Token generated")
