@@ -1,6 +1,6 @@
 body {
     padding-top: 50px;
-    background-color: #F6F7F8;
+    background-color: #e5e6d8;
     color: #011627;
 }
 .sign{
@@ -145,4 +145,199 @@ li.when{
 
 .desc button{
 
+}
+
+/***************** Home Page Style ************************/
+
+.noted{
+  display: flex;
+  margin-top: 150px;
+  height:350px;
+  /* border: 1px solid red; */
+}
+
+.container-one{
+  width:50%;
+  margin-right: 10px;
+  height: 100%;
+
+}
+
+.noted img{
+  /* box-shadow: 2px 5px 2px 1px #737373; */
+  border: 1px solid grey;
+
+}
+
+.container-two h2{
+  margin-left: 5px;
+  text-align: center;
+
+}
+
+.container-two i{
+  padding-right: 10px;
+}
+
+.container-two{
+  width: 50%;
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 8px;
+  background-color: white;
+  font-size: 120%;
+  font-family: sans-serif;
+}
+
+.container-two hr{
+  margin-bottom: 10px;
+}
+
+.container-two p{
+  margin-bottom: 60px;
+}
+
+.container-two button{
+  display: inline-block;
+  width: 49%;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  height: 40px;
+  border-radius: 7px;
+  opacity: .7;
+}
+
+.container-one img{
+  height: 100%;
+  width: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.container-two{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  font-size:
+}
+
+.green{
+  background-color: green;
+}
+
+.blue{
+  background-color: blue;
+}
+
+
+/*******************Login********************/
+.form-login{
+  margin-top: 100px;
+  height:400px;
+  width:400px;
+  background-color: white;
+  padding: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-login hr{
+  margin-bottom: 40px;
+}
+
+.form-login h2{
+  text-align: center;
+
+}
+
+.form-group{
+  margin-bottom: 30px;
+}
+
+.form-login button{
+  margin-top: 70px;
+  background-color: #78ed5a;
+}
+
+/************************* New Post Form ************************/
+.new_{
+  background-color: white;
+  font-weight:bold;
+  margin-top: 100px;
+  padding-top: 30px;
+  width: 50%;
+  padding-bottom: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 120%;
+}
+
+.new_ h3{
+  text-align: center;
+}
+
+.new_ button{
+  background-color: #78ed5a;
+  font-weight:bold;
+  width: 100%;
+}
+
+.form-group label{
+  display: block;
+}
+
+.form-group input{
+  display: block;
+}
+
+.photopost{
+  width: 100%;
+  border-color: grey;
+  border-style: hidden;
+}
+
+.caption{
+  width:100%;
+  height: 100px;
+}
+
+/****************** sign up form **************************/
+
+.sign{
+  width: 50%;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 110%;
+  margin-bottom: 30px;
+  margin-top: 60px;
+  padding-bottom: 50px;
+}
+
+.sign h1{
+  text-align: center;
+}
+
+input[type=text]{
+  width:100%;
+  height: 50px;
+  border-color: grey;
+}
+
+input[type=password]{
+  width:100%;
+  height: 50px;
+}
+
+.sign button{
+  background-color: #78ed5a;
+  width: 100%;
+}
+
+.form-group.bio input{
+  height: 150px;
 }
