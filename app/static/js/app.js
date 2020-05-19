@@ -24,6 +24,9 @@ Vue.component('app-header',{
               <li class="nav-item active">
                 <router-link class="nav-link" to="/posts/new">Make post</router-link>
               </li>
+              <li class="nav-item active">
+                <router-link class="nav-link" to="/logout">Logout</router-link>
+              </li>
             </ul>
           </div>
         </nav>
@@ -196,8 +199,10 @@ const Login = Vue.component('login',{
       </div>
     `,
     data: function () {
-
-        return { error : "None" }
+        return {
+            error: "None",
+            message: ""
+        }
     },
     created: function () {
       console.log("Entered the login page");
@@ -221,11 +226,18 @@ const Login = Vue.component('login',{
                 return response.json();
             })
             .then(function (response) {
-                let jwt_token = response.data.token;
+                let jwt_token = response.status.token;
+                let message = response.status.message;
 
+                console.log(message);
                 localStorage.setItem('token', jwt_token);
                 console.info('Token generated and added to localStorage');
-                router.push('explore');
+                if (jwt_token) {
+                    router.push('explore');
+                } else {
+                    console.log("reloading router..");
+                    router.go()
+                }
             })
             .then(function (jsonResponse) {
 
@@ -233,14 +245,47 @@ const Login = Vue.component('login',{
             })
             .catch(function (error) {
                 console.log(error);
+                error = error
             });
         },
 
     }
 });
 
-/*const Logout = Vue.component('logout',{
-});*/
+const Logout = Vue.component('logout',{
+    template:`
+        <div>
+        <h2> You have been successfully logged out </h2>
+        <button @click="$router.push('/')"> Return to home </button>
+        </div>
+    `,
+    created: function() {
+        fetch('/api/auth/logout',{
+          method: 'GET',
+          headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (jsonResponse) {
+            localStorage.removeItem('token');
+            console.log('Token removed from localStorage')
+            console.log(jsonResponse);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    },
+    data: function () {
+        return {
+            message: ''
+        }
+    },
+    methods: {
+    }
+});
 
 const Explore = Vue.component('explore',{
     template: `
@@ -253,7 +298,9 @@ const Explore = Vue.component('explore',{
           <ul v-else>
               <h2> Posts go here </h2>
               <li v-for="post in posts">
-                  <h4> {{ post.caption }} </h4>
+                  <h4> {{ post.created_by }} </h4>
+                  <img :src="'static/uploads/' + post.photo" />
+                  <h6> {{ post.caption }} </h6>
                   <p> {{ post.created_on }}</p>
               </li>
           </ul>
@@ -394,7 +441,7 @@ const router = new VueRouter({
       { path: '/register', component: SignUp },
       { path: '/About', component: About },
       { path: '/login', component: Login },
-      //{ path: '/logout', component: Logout },
+      { path: '/logout', component: Logout },
       { path: '/explore', component: Explore },
       { path: '/posts/new', component: MakePost },
       //{ path: '/users/:user_id', component: ViewUser}

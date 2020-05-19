@@ -10,8 +10,9 @@ import base64
 from functools import wraps
 from app import app, db, login_manager
 from flask import render_template, request, redirect, url_for, flash, jsonify, g, _request_ctx_stack
+from flask_login import login_user, logout_user, current_user, login_required
 from .forms import *
-from app.models import UserProfile
+from app.models import *
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import date
@@ -144,13 +145,15 @@ def login():
             # }]
 
             token = generate_token()
-            status = [{
+            status = {
                 "token": token,
                 "message": "User successfully logged in"
-            }]
-            return jsonify(error=None,data={'token': token}, message="Token generated")
+            }
+            #return jsonify(status=status)
 
         else:
+            print(form_errors(lForm))
+
             status = {
                 "errors":[
                     form_errors(lForm)
@@ -160,7 +163,8 @@ def login():
     return jsonify(status=status)
 
 @app.route('/api/auth/logout', methods=['GET'])
-#@login_required
+@login_required
+@requires_auth
 def logout():
     logout_user()
     flash('Logout successful!')
@@ -170,7 +174,6 @@ def logout():
     }]
 
     return jsonify(status=status)
-    pass
 
 @app.route('/api/users/<user_id>/posts', methods=['POST'])
 def usr_add_post(user_id):
@@ -218,7 +221,7 @@ def usr_follow(arg):
     pass
 
 @app.route('/api/posts', methods=['GET'])
-#@requires_auth
+@requires_auth
 def get_all_posts():
 
     defPosts = [
@@ -248,15 +251,15 @@ def get_all_posts():
     }
   ]
 
-    #posts = Posts.query.fetchall()
+    posts = Posts.query.filter_by().all()
+    print([post.as_dict() for post in posts])
+    if posts == []:
+        dictPosts = defPosts
+    else:
+        dictPosts = [post.as_dict() for post in posts]
 
-    # if posts == []:
-    #     posts = defPosts
-    #     status = {defPosts}
 
-
-
-    return jsonify(error=None, posts=defPosts, message="Success"), 201
+    return jsonify(error=None, posts=dictPosts, message="Success"), 201
 
 @app.route('/api/posts/<post_id>/like', methods=['POST'])
 def like_post(post_id,user_id):
@@ -284,8 +287,8 @@ def generate_token():
 ###
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
+def load_user(id):
+    return UserProfile.query.get(int(id))
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):

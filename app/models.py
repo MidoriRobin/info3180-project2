@@ -58,6 +58,7 @@ class Posts(db.Model):
     """docstring for Posts."""
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     photo = db.Column(db.String(80))
     caption = db.Column(db.Text)
     created_on = db.Column(db.DateTime)
@@ -68,6 +69,20 @@ class Posts(db.Model):
         self.photo = photo
         self.caption = caption
         self.created_on = created_on
+
+    def as_dict(self):
+
+        dict = {
+            "id": self.id,
+            "user_id": self.user_id,
+            "created_by": UserProfile.query.filter_by(id=self.user_id).first().username,
+            "photo": self.photo,
+            "caption": self.caption,
+            "created_on": self.created_on,
+            "likes": len(Likes.query.filter_by(post_id=self.id).all())
+        }
+
+        return dict
 
 
 class Follows(db.Model):
