@@ -312,7 +312,6 @@ const Logout = Vue.component('logout',{
 
 const Explore = Vue.component('explore',{
     template: `
-<<<<<<< HEAD
         <div class="posts">
           <button type="button" name="button" class="make-posts" >Make Post</button>
 
@@ -333,25 +332,10 @@ const Explore = Vue.component('explore',{
                   <p><i class="fas fa-heart"></i>Likes</p>
                   <i class="far fa-heart"></i>
                   <p class="datetime"> {{ post.created_on }}</p>
-=======
-        <div>
-          <!-- code to display the posts and select component by id-->
-          <ul v-if="posts === [] ">
-              <h2> No posts to display....or you arent authorized</h2>
-          </ul>
-          <ul v-else>
-              <h2> Posts go here </h2>
-              <li v-for="post in posts">
-                  <h4><img :src="'/static/uploads/' + post.user_photo"> {{ post.created_by }} </h4>
-                  <img :src="'static/uploads/' + post.photo" />
-                  <h6> {{ post.caption }} </h6>
-                  <p> {{ post.likes }}</p>
-                  <p> {{ post.created_on }}</p>
->>>>>>> 2d0b531016f39c0ee47aabd799a2c674943ec0ce
-              </li>
-          </ul>
-
+                </li>
+            </ul>
         </div>
+
     `,
     created: function () {
       //do something after creating vue instance
