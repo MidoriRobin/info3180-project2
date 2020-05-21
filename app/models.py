@@ -88,15 +88,20 @@ class Posts(db.Model):
         self.caption = caption
         self.created_on = created_on
 
+
+    def getdate(self):
+        return self.created_on.strftime("%B %d, %Y")
+
     def as_dict(self):
 
         dict = {
             "id": self.id,
             "user_id": self.user_id,
             "created_by": UserProfile.query.filter_by(id=self.user_id).first().username,
+            "user_photo": UserProfile.query.filter_by(id=self.user_id).first().photoname,
             "photo": self.photo,
             "caption": self.caption,
-            "created_on": self.created_on,
+            "created_on": self.getdate(),
             "likes": len(Likes.query.filter_by(post_id=self.id).all())
         }
 
