@@ -289,21 +289,29 @@ const Logout = Vue.component('logout',{
 
 const Explore = Vue.component('explore',{
     template: `
-        <div>
+        <div class="posts">
+          <button type="button" name="button" class="make-posts" >Make Post</button>
 
           <!-- code to display the posts and select component by id-->
-          <ul v-if="posts === '' ">
+
+          <ul  v-if="posts === '' ">
               <h2> No posts to display....or you arent authorized</h2>
           </ul>
-          <ul v-else>
-              <h2> Posts go here </h2>
-              <li v-for="post in posts">
+
+          <ul v-else class="disp-all">
+              <li v-for="post in posts" class="each-post">
+                  <div class="headss">
+                  <img class="small" :src="'/static/uploads/' + post.user_photo">
                   <h4> {{ post.created_by }} </h4>
+                  </div>
                   <img :src="'static/uploads/' + post.photo" />
                   <h6> {{ post.caption }} </h6>
-                  <p> {{ post.created_on }}</p>
+                  <p><i class="fas fa-heart"></i>Likes</p>
+                  <i class="far fa-heart"></i>
+                  <p class="datetime"> {{ post.created_on }}</p>
               </li>
           </ul>
+
         </div>
     `,
     created: function () {
@@ -432,20 +440,24 @@ const ViewUser = Vue.component('view-user',{
           <div class="who">
             <h3 class="head">{{user.firstname}} {{user.lastname}}</h3>
             <ul class="oinfo">
-              <li class="where">{{ user.location }}</li>
-              <li class="when">Joined on {{ user.joindate }}</li>
-              <li class="email">{{ user.biography }}</li>
+              <li class="rrm where">{{ user.location }}</li>
+              <li class="rrm when">Joined on {{ user.joindate }}</li>
+              <li class="rrm email">{{ user.biography }}</li>
             </ul>
           </div>
+          <div class="flls">
           <ul>
-            <li> Posts: {{ user.posts }} </li>
-            <li> Followers: {{ user.followers }} </li>
+            <li class="ind"> Posts: {{ user.posts }} </li>
+            <li class="ind"> Followers: {{ user.followers }} </li>
             <button>Follow</button>
           </ul>
+          </div>
       </div>
-        <ul>
-          <li v-for="post in posts"><img :src="'/static/uploads/' + post.photo"></li>
-        </ul>
+        <div class="flx-container">
+          <ul class="rrm">
+            <li v-for="post in posts"><img :src="'/static/uploads/' + post.photo"></li>
+          </ul>
+        </div>
     </div>
     `,
     created: function() {

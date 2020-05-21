@@ -45,12 +45,12 @@ button:hover{
   background-color: lightgreen;
 }
 
-ul.proflist{
+/* ul.proflist{
   margin-top: 50px;
   list-style: none;
-}
+} */
 
-ul.proflist li{
+/* ul.proflist li{
   display: grid;
   grid-template-columns: 250px auto 200px;
   border-top-style: solid;
@@ -60,7 +60,7 @@ ul.proflist li{
   padding: 10px;
   margin: 20px;
   height: 200px;
-}
+} */
 
 .proflist div{
   grid-column: 2;
@@ -80,9 +80,6 @@ ul.proflist li{
   margin-bottom: auto;
   height: 50px;
 }
-ul.demo li{
-  list-style: none;
-}
 
 .prosplash {
   display: grid;
@@ -91,14 +88,14 @@ ul.demo li{
   margin-right: auto;
   padding-left: 10px;
   height: auto;
-  width: 700px;
+  width: 100%;
   align-content: space-between;
   grid-template-columns: 200px auto;
   grid-template-rows: auto auto auto;
   grid-gap: 10px;
-  border-top: 5px solid #2EC4B6;
-  border-radius: 10px;
+  border-radius: 5px;
   box-shadow: 1px 3px 4px gray;
+  background-color: white;
 }
 
 .prosplash img{
@@ -106,12 +103,39 @@ ul.demo li{
   margin:auto;
   width: 100%;
   height: 100%;
-  border-radius: 10%;
+}
+
+.flls{
+  display: inline-flex;
+}
+
+.rrm{
+  list-style: none;
+  margin-top: 20px;
+  margin-left: 0;
+  margin-right:auto;
+}
+
+.rrm li{
+  margin-right: 10px;
+}
+
+.rrm img{
+  width:300px;
+  height: 300px;
+}
+
+ul.rrm {
+  display: flex;
+  flex-direction: row;
+  width:900px;
+
 }
 
 .lead{
   grid-area: 1 / 1;
   padding: 20px;
+  width:100%;
 }
 
 .who{
@@ -143,8 +167,9 @@ li.when{
   text-align: left;
 }
 
-.desc button{
-
+.flx-container{
+  display: flex;
+  width:900px;
 }
 
 /***************** Home Page Style ************************/
@@ -160,6 +185,12 @@ li.when{
   width:50%;
   margin-right: 10px;
   height: 100%;
+
+}
+
+.flx-container{
+  display: grid;
+  grid-template-columns:300px ;
 
 }
 
@@ -341,3 +372,62 @@ input[type=password]{
 .form-group.bio input{
   height: 150px;
 }
+
+/********** Explore Styles ***************/
+.each-post{
+  list-style: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: white;
+  margin-top: 40px;
+  margin-bottom: 50px;
+  width:65%;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.each-post img{
+  width:100%;
+  height: 450px;
+  box-sizing: border-box;
+}
+
+.each-post h4{
+  font-size: 100%;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.each-post h6, p{
+  margin-left: 10px;
+}
+
+.each-post h6{
+  font-size: 100%;
+  padding-top: 10px;
+  margin-bottom: 50px;
+
+}
+
+.each-post p{
+  display: inline;
+  font-size: 100%;
+  align-self: flex-end;
+}
+
+img.small{
+  width:40px;
+  height:40px;
+}
+
+.headss{
+  display: flex;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.datetime{
+  margin-left: 65%;
+}
+
+
+/************** View User style **************/
