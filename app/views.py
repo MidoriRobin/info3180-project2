@@ -137,19 +137,12 @@ def login():
             #Rev.Kob
             login_user(user)
             #flash('Successful Login!')
-
-            # status = [{
-            #     "message": "User successfully loggged in",
-            #     "username": username,
-            #     "password": password
-            # }]
-
-            token = generate_token(user.id)
+            token = generate_token(user.id, user.username)
             status = {
                 "token": token,
-                "message": "User successfully logged in"
+                "message": "User successfully logged in",
+                "user": user.id
             }
-            #return jsonify(status=status)
 
         else:
             print(form_errors(lForm))
@@ -176,6 +169,8 @@ def logout():
     return jsonify(status=status)
 
 @app.route('/api/users/<user_id>/posts', methods=['POST'])
+@login_required
+@requires_auth
 def usr_add_post(user_id):
 
     pForm = PostForm()
@@ -189,7 +184,9 @@ def usr_add_post(user_id):
         filename = secure_filename(photo.filename)
         photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        #post class accepting the above values would go here
+        post = Posts(uid,filename,description,date.today())
+        db.session.add(post)
+        db.session.commit()
 
         status = [{
             "message": "Successfully created a new post",
@@ -201,8 +198,7 @@ def usr_add_post(user_id):
     else:
         status = {
             "errors": [
-                #form_errors(pForm)
-                "Nothing entered"
+                form_errors(pForm)
             ]
         }
 
@@ -210,6 +206,8 @@ def usr_add_post(user_id):
 
 
 @app.route('/api/users/<user_id>/posts', methods=['GET'])
+@login_required
+@requires_auth
 def usr_fetch_post(user_id):
 
     user = UserProfile.query.filter_by(id=user_id).first()
@@ -226,10 +224,22 @@ def usr_fetch_post(user_id):
 
 @app.route('/api/users/<user_id>/follow', methods=['POST'])
 def usr_follow(user_id):
-    pass
+    user = UserProfile.query.filter_by(id=user_id).first()
+
+    follow = Follows(user_id, g.current_user.id)
+
+    db.session.add(follow)
+    db.session.commit()
+
+    status = {
+        "message": "You are now following that user"
+    }
+
+    return jsonify(status=status)
 
 @app.route('/api/posts', methods=['GET'])
 @requires_auth
+@login_required
 def get_all_posts():
 
     defPosts = [
@@ -281,9 +291,9 @@ def like_post(post_id):
 
 
 
-def generate_token(user_id):
+def generate_token(user_id, uname):
 
-    payload = {"user_id": user_id}
+    payload = {"user_id": user_id, "uname": uname}
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
 
     #return jsonify(error=None, data={'token': token}, message="Token generated")

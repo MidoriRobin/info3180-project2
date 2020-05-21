@@ -24,7 +24,6 @@ class LoginForm(FlaskForm):
 class PostForm(FlaskForm):
     """docstring for PostForm."""
 
-    userid = IntegerField('',validators=[InputRequired()])
     description = TextAreaField('Description: ', validators=[DataRequired()])
     photopost = FileField('Photo: ', validators=[FileRequired(),
         FileAllowed(['jpg','png','Images only'])

@@ -22,7 +22,7 @@ Vue.component('app-header',{
                 <router-link class="nav-link" to="/explore">Explore</router-link>
               </li>
               <li class="nav-item active">
-                <router-link class="nav-link" to="/posts/new">Make post</router-link>
+                <!--<router-link class="nav-link">My Profile</router-link>-->
               </li>
               <li class="nav-item active">
                 <router-link class="nav-link" to="/logout">Logout</router-link>
@@ -31,7 +31,27 @@ Vue.component('app-header',{
           </div>
         </nav>
     </header>
-    `
+    `,
+    created() {
+      //do something after creating vue instance
+
+    },
+    data: function () {
+        return {
+          log_usr_id: ''
+        }
+    },
+    methods: {
+      goToProfile: function () {
+          let self = this;
+
+          if (sessionStorage['usid']){
+            self.log_usr_id = sessionStorage['usid']
+          } else {
+            console.log('User not yet logged in')
+          }
+      }
+    }
 });
 
 Vue.component('app-footer',{
@@ -228,9 +248,11 @@ const Login = Vue.component('login',{
             .then(function (response) {
                 let jwt_token = response.status.token;
                 let message = response.status.message;
+                let uid = response.status.user;
 
                 console.log(message);
                 localStorage.setItem('token', jwt_token);
+                sessionStorage.setItem('usid', uid);
                 console.info('Token generated and added to localStorage');
                 if (jwt_token) {
                     router.push('explore');
@@ -271,6 +293,7 @@ const Logout = Vue.component('logout',{
         })
         .then(function (jsonResponse) {
             localStorage.removeItem('token');
+            sessionStorage.removeItem('usid');
             console.log('Token removed from localStorage')
             console.log(jsonResponse);
         })
@@ -289,6 +312,7 @@ const Logout = Vue.component('logout',{
 
 const Explore = Vue.component('explore',{
     template: `
+<<<<<<< HEAD
         <div class="posts">
           <button type="button" name="button" class="make-posts" >Make Post</button>
 
@@ -309,6 +333,21 @@ const Explore = Vue.component('explore',{
                   <p><i class="fas fa-heart"></i>Likes</p>
                   <i class="far fa-heart"></i>
                   <p class="datetime"> {{ post.created_on }}</p>
+=======
+        <div>
+          <!-- code to display the posts and select component by id-->
+          <ul v-if="posts === [] ">
+              <h2> No posts to display....or you arent authorized</h2>
+          </ul>
+          <ul v-else>
+              <h2> Posts go here </h2>
+              <li v-for="post in posts">
+                  <h4><img :src="'/static/uploads/' + post.user_photo"> {{ post.created_by }} </h4>
+                  <img :src="'static/uploads/' + post.photo" />
+                  <h6> {{ post.caption }} </h6>
+                  <p> {{ post.likes }}</p>
+                  <p> {{ post.created_on }}</p>
+>>>>>>> 2d0b531016f39c0ee47aabd799a2c674943ec0ce
               </li>
           </ul>
 
@@ -382,25 +421,24 @@ const Explore = Vue.component('explore',{
 });
 
 const MakePost = Vue.component('make-post',{
-    template:`
+      template: `
+        <div class="new_">
+          <h3>New Post</h3>
+          <hr>
+          <form @submit.prevent="makePost" id="postForm" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+            <label for="photopost"> Photo </label>
+            <input class="photopost" type="file" name="photopost" id="photopost" value="Put Image Here"><br />
+            </div>
 
-    <div class="new_">
-    <h3>New Post</h3>
-    <hr>
-      <form @submit.prevent="makePost" id="postForm" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-        <label for="photopost"> Photo </label>
-        <input class="photopost" type="file" name="photopost" id="photopost" value="Put Image Here"><br />
+            <div class="form-group">
+            <label for="description"> Caption </label>
+            <input type="text" name="description" id="description" value="" class="caption" placeholder="Write a caption...">
+            </div>
+
+            <button type="submit"> Submit </button>
+          </form>
         </div>
-
-        <div class="form-group">
-        <label for="description"> Caption </label>
-        <input type="text" name="description" id="description" value="" class="caption" placeholder="Write a caption...">
-        </div>
-
-        <button type="submit"> Submit </button>
-      </form>
-    </div>
     `,
     data: function () {
         return {}
@@ -410,14 +448,18 @@ const MakePost = Vue.component('make-post',{
           let self = this;
           let postForm = document.getElementById('postForm');
           let form_data = new FormData(postForm);
+          let meid = sessionStorage.getItem('usid');
 
-          fetch("/api/users/<user_id>/posts", {
+          fetch("/api/users/" + meid + "/posts", {
               method: 'POST',
               body: form_data,
-              headers:{},
+              headers:{
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+              },
               credentials: 'same-origin'
           })
           .then(function (response) {
+              router.push({ path: '/explore' });
               return response.json();
           })
           .then(function (jsonResponse) {
@@ -465,7 +507,9 @@ const ViewUser = Vue.component('view-user',{
       //do something after creating vue instance
       fetch("/api/users/" + this.$route.params.user_id + "/posts",{
           method: 'GET',
-          headers: {},
+          headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
+          },
           credentials: 'same-origin'
       })
       .then(function (response) {
@@ -499,7 +543,7 @@ const ViewUser = Vue.component('view-user',{
           fetch("/api/users/"+ self.user.id + "follow",{
               method: 'GET',
               headers: {
-
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
               },
               credentials: 'same-origin'
           })
@@ -537,5 +581,10 @@ let app = new Vue({
     router,
     data: {
         token: '',
+
+    },
+    beforeCreate() {
+      //do something before creating vue instance
+      sessionStorage['usid'] = ''
     }
 });
